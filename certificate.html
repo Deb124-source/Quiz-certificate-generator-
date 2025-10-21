@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Certificate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        body { background: #ede7da; min-height: 100vh; padding: 40px 0; }
+        .cert-paper {
+            background: #fbf7ef;
+            background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
+            position: relative;
+        }
+        .cert-paper:before, .cert-paper:after {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 2px solid #d4af37; 
+            pointer-events: none;
+        }
+        .cert-paper:after { inset: 22px; border-color: #b28b23; }
+        .script-font { font-family: 'Brush Script MT', cursive; }
+        .signature-line { border-bottom: 2px solid #2f2f2f; display: inline-block; padding-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <nav class="max-w-5xl mx-auto px-6 mb-6">
+        <a href="/" class="inline-flex items-center gap-2 text-xl font-bold text-neutral-900">
+            <span class="rounded-full bg-neutral-900 text-white w-8 h-8 inline-flex items-center justify-center leading-none text-base">?</span>
+            <span>Quizo</span>
+        </a>
+    </nav>
+    <div class="max-w-5xl mx-auto px-6">
+        <div id="certificate-paper" class="cert-paper rounded-lg shadow-xl p-16">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center gap-2 text-4xl font-bold tracking-tight text-neutral-900">
+                    <span class="rounded-full bg-neutral-900 text-white w-10 h-10 inline-flex items-center justify-center leading-none text-2xl">?</span>
+                    <span>Quizo</span>
+                    </div>
+                <div class="text-3xl md:text-5xl font-extrabold tracking-widest uppercase text-neutral-900 mt-4">Certificate of Achievement</div>
+                        </div>
+                        
+            <div class="mt-10 text-center text-neutral-800">
+                <div class="uppercase tracking-widest text-sm">Awarded To</div>
+                                <div class="mt-4">
+                    <span class="script-font text-3xl md:text-4xl signature-line">{{ name }}</span>
+                                </div>
+                <div class="mt-6 max-w-3xl mx-auto text-sm md:text-base text-neutral-700">
+                    For successful completion of the Quizo challenge with a score of
+                    <span class="font-bold text-green-600">{{ score }}</span> out of <span class="font-bold text-gray-600">{{ total }}</span>.
+            </div>
+                <div class="mt-6 font-medium">Date Issued: <span class="text-neutral-900">{{ current_date }}</span></div>
+                <div class="mt-2 text-sm text-neutral-600">Certificate Code: <span class="font-semibold tracking-wider">{{ certificate_code }}</span></div>
+            </div>
+
+            <div class="mt-14 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="script-font text-2xl border-b border-neutral-700 inline-block pb-1">Debdut Nandy</div>
+                    <div class="mt-2 text-sm text-neutral-600">CEO</div>
+            </div>
+                <div>
+                    <div class="script-font text-2xl border-b border-neutral-700 inline-block pb-1">Subhadeep Adhikary</div>
+                    <div class="mt-2 text-sm text-neutral-600">HR</div>
+        </div>
+                <div>
+                    <div class="script-font text-2xl border-b border-neutral-700 inline-block pb-1">Wahaz Zaman</div>
+                    <div class="mt-2 text-sm text-neutral-600">Mentor</div>
+                            </div>
+                        </div>
+                        
+            
+        </div>
+        <div class="mt-6 flex items-center justify-center gap-4">
+            <button id="download-certificate" type="button" class="px-6 py-2 rounded-md bg-neutral-900 text-white hover:bg-neutral-800">Download Certificate</button>
+            <a href="/" class="px-6 py-2 rounded-md border border-neutral-300 text-neutral-800 hover:bg-neutral-100">Play Again</a>
+        </div>
+    </div>
+    
+    <script>
+        (function(){
+            const btn = document.getElementById('download-certificate');
+            if (!btn) return;
+            btn.addEventListener('click', async function(){
+                const node = document.getElementById('certificate-paper');
+                if (!node) return;
+                
+                window.scrollTo(0, 0);
+                const canvas = await html2canvas(node, { scale: 2, backgroundColor: null, useCORS: true });
+                const dataUrl = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                const rawName = "{{ name|e }}" || 'certificate';
+                const safeName = String(rawName).replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
+                link.download = safeName + '_certificate.png';
+                link.href = dataUrl;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            });
+        })();
+    </script>
+</body>
+</html>
